@@ -28,6 +28,7 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const FormSchema = z.object({
   "task-name": z
@@ -69,6 +70,8 @@ type TodoListAddButtonProps = {
 export default function TodoListAddButton({
   setUpdate,
 }: TodoListAddButtonProps) {
+  const queryClient = useQueryClient();
+
   const [open, setOpen] = useState(false);
 
   const ref = useRef<HTMLFormElement>(null);
@@ -92,6 +95,9 @@ export default function TodoListAddButton({
     toast("Success to create task.");
     setUpdate((prev: boolean) => !prev);
     setOpen(!open);
+    queryClient.invalidateQueries({
+      queryKey: ["tasks"],
+    });
   }
 
   return (
