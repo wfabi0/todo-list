@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
+import QueryProvider from "@/providers/QueryProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -20,11 +21,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-br" suppressHydrationWarning>
-      <body className={cn("antialiased min-h-screen", inter.className)}>
-        {children}
-        <Toaster />
-      </body>
-    </html>
+    <QueryProvider>
+      <html lang="pt-br" suppressHydrationWarning>
+        <body className={cn("antialiased min-h-screen", inter.className)}>
+          {children}
+          <Toaster />
+        </body>
+      </html>
+    </QueryProvider>
   );
 }

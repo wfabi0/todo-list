@@ -13,9 +13,15 @@ import { Input } from "../../ui/input";
 import { useRef, useState } from "react";
 import { MoreHorizontal, Package } from "lucide-react";
 import { Row } from "@tanstack/react-table";
-import TodoListEditCategorySelect from "./todo-list-edit-category";
+import TodoListEditCategorySelect, {
+  categories,
+  Category,
+} from "./todo-list-edit-category";
 import { Textarea } from "@/components/ui/textarea";
-import TodoListEditStatusSelect from "./todo-list-edit-status-selection";
+import TodoListEditStatusSelect, {
+  Status,
+  status,
+} from "./todo-list-edit-status-selection";
 import { Task } from "@prisma/client";
 import moment from "moment";
 import { z } from "zod";
@@ -29,6 +35,8 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import FormConfirmButton from "@/components/form-confirm-button";
+import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const EditFormSchema = z.object({
   "task-id": z.string({ required_error: "" }),
@@ -69,6 +77,7 @@ type TodoListEditButtonProps = {
 };
 
 export default function TodoListEditButton({ row }: TodoListEditButtonProps) {
+  const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
 
   const ref = useRef<HTMLFormElement>(null);
@@ -76,8 +85,24 @@ export default function TodoListEditButton({ row }: TodoListEditButtonProps) {
     resolver: zodResolver(EditFormSchema),
   });
 
-  function onSubmit(data: z.infer<typeof EditFormSchema>) {
-    console.log(JSON.stringify(data, null, 2));
+  async function onSubmit(data: z.infer<typeof EditFormSchema>) {
+    const response = await fetch("/api/task/edit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      return toast("Failed to edit task.");
+    }
+
+    form.reset();
+    toast("Task edited successfully.");
+    setOpen(!open);
+    queryClient.invalidateQueries({
+      queryKey: ["tasks"],
+    });
   }
 
   return (
@@ -87,6 +112,16 @@ export default function TodoListEditButton({ row }: TodoListEditButtonProps) {
           form.setValue("task-id", row.original.id);
           form.setValue("task-name", row.original.name);
           form.setValue("task-description", row.original.description || "");
+          form.setValue(
+            "task-status",
+            status.find((stats) => stats.value === row.original.status) ||
+              (status.find((stats) => stats.value === "TODO") as Status)
+          );
+          form.setValue(
+            "task-category",
+            categories.find((cat) => cat.value === row.original.category) ||
+              (categories.find((cat) => cat.value === "OTHER") as Category)
+          );
         }}
       >
         <MoreHorizontal className="h-4 w-4" />

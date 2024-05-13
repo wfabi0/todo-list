@@ -58,6 +58,7 @@ export async function getTasks(workspaceId: string) {
 
 export async function editTask(formData: z.infer<typeof EditFormSchema>) {
   const {
+    "task-id": id,
     "task-name": name,
     "task-description": description,
     "task-status": status,
@@ -71,7 +72,7 @@ export async function editTask(formData: z.infer<typeof EditFormSchema>) {
   try {
     const task = await prisma.task.update({
       where: {
-        id: "",
+        id: id,
       },
       data: {
         name,

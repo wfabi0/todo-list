@@ -37,6 +37,7 @@ import TodoListEditButton from "./edit-button/todo-list-edit-button";
 import TodoListPencilButton from "./todo-list-pencil-button";
 import { Task } from "@prisma/client";
 import SpinUtil from "../utils/spin";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const columns: ColumnDef<Task>[] = [
   {
@@ -136,27 +137,31 @@ const columns: ColumnDef<Task>[] = [
 ];
 
 export default function TodoListData() {
+  const queryClient = useQueryClient();
+
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
 
-  const [tasks, setTasks] = useState<Task[]>([]);
+  // const [tasks, setTasks] = useState<Task[]>([]);
   const [update, setUpdate] = useState(false);
-  const [isLoading, setLoading] = useState(true);
+  // const [isLoading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetch("/api/task/list?query=teste", { next: { revalidate: 5000 } })
-      .then((response) => response.json())
-      .then((data) => {
-        setTasks(data?.tasks || []);
-        setLoading(false);
-      })
-      .catch((error) => console.error(error));
-  }, [update]);
+  const getTasks = async () => {
+    const response = await fetch("/api/task/list?query=teste", {
+      next: { revalidate: 5000 },
+    });
+    return response.json();
+  };
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["tasks"],
+    queryFn: getTasks,
+  });
 
   const table = useReactTable({
-    data: tasks,
+    data: isLoading ? [] : data.tasks,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,

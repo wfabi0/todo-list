@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   BadgeDollarSign,
   BookOpenText,
@@ -31,13 +31,13 @@ import { Row } from "@tanstack/react-table";
 import { Category as CategoryOptions, Task } from "@prisma/client";
 import { ControllerRenderProps, UseFormReturn } from "react-hook-form";
 
-type Category = {
+export type Category = {
   value: CategoryOptions;
   label: string;
   icon: LucideIcon;
 };
 
-const categories: Category[] = [
+export const categories: Category[] = [
   {
     value: "HOME",
     label: "Home",

@@ -20,13 +20,13 @@ import { Task, TaskStatus } from "@prisma/client";
 import { ControllerRenderProps, UseFormReturn } from "react-hook-form";
 import { FormControl } from "@/components/ui/form";
 
-type Status = {
+export type Status = {
   value: TaskStatus;
   label: string;
   color: string;
 };
 
-const status: Status[] = [
+export const status: Status[] = [
   {
     value: "TODO",
     label: "Todo",
