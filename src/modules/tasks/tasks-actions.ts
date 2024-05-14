@@ -1,10 +1,27 @@
 "use server";
 
-import { Category, TaskStatus } from "@prisma/client";
-import prisma from "../database/prisma-service";
-import { z } from "zod";
 import { FormSchema } from "@/components/todo-list/add-button/todo-list-add-button";
 import { EditFormSchema } from "@/components/todo-list/edit-button/todo-list-edit-button";
+import { Category, TaskStatus } from "@prisma/client";
+import { z } from "zod";
+import prisma from "../database/prisma-service";
+
+export async function getTask(id: string) {
+  try {
+    const task = await prisma.task.findUnique({
+      where: {
+        id,
+      },
+    });
+    if (!task) {
+      return { message: "Task not found.", status: 404 };
+    }
+    return { task, message: "Task fetched successfully.", status: 200 };
+  } catch (error) {
+    console.error(error);
+    return { message: "Failed to fetch task.", status: 500 };
+  }
+}
 
 export async function createTask(formData: z.infer<typeof FormSchema>) {
   const {
@@ -85,5 +102,20 @@ export async function editTask(formData: z.infer<typeof EditFormSchema>) {
   } catch (error) {
     console.error(error);
     return { message: "Failed to update task.", status: 500 };
+  }
+}
+
+export async function deleteTask(id: string) {
+  try {
+    const task = await prisma.task.findUnique({ where: { id } });
+    if (!task) {
+      return { message: "Task not found.", status: 404 };
+    }
+
+    await prisma.task.delete({ where: { id } });
+    return { message: "Task deleted successfully.", status: 200 };
+  } catch (error) {
+    console.error(error);
+    return { message: "Failed to delete task.", status: 500 };
   }
 }
