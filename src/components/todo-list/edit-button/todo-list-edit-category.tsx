@@ -1,6 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { Category as CategoryOptions, Task } from "@prisma/client";
+import { Row } from "@tanstack/react-table";
 import {
   BadgeDollarSign,
   BookOpenText,
@@ -12,23 +28,7 @@ import {
   ShoppingBag,
   UserRound,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import { Row } from "@tanstack/react-table";
-import { Category as CategoryOptions, Task } from "@prisma/client";
+import { useState } from "react";
 import { ControllerRenderProps, UseFormReturn } from "react-hook-form";
 
 export type Category = {

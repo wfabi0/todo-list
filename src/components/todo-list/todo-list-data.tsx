@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Task } from "@prisma/client";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -13,8 +14,10 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table";
+import { ArrowLeft, ArrowRight, ArrowUpDown } from "lucide-react";
+import moment from "moment";
+import { useState } from "react";
 import { Button } from "../ui/button";
-import { ArrowLeft, ArrowRight, ArrowUpDown, Pencil } from "lucide-react";
 import { Checkbox } from "../ui/checkbox";
 import {
   DropdownMenu,
@@ -22,9 +25,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import moment from "moment";
 import { Input } from "../ui/input";
-import TodoListAddButton from "./add-button/todo-list-add-button";
 import {
   Table,
   TableBody,
@@ -33,11 +34,10 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import TodoListEditButton from "./edit-button/todo-list-edit-button";
-import TodoListPencilButton from "./todo-list-pencil-button";
-import { Task } from "@prisma/client";
 import SpinUtil from "../utils/spin";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import TodoListAddButton from "./add-button/todo-list-add-button";
+import TodoListMenu from "./todo-list-menu";
+import TodoListPencilButton from "./todo-list-pencil-button";
 
 const columns: ColumnDef<Task>[] = [
   {
@@ -130,8 +130,9 @@ const columns: ColumnDef<Task>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const payment = row.original;
+      return <TodoListMenu row={row} />;
 
-      return <TodoListEditButton row={row} />;
+      // return <TodoListEditButton row={row} />;
     },
   },
 ];

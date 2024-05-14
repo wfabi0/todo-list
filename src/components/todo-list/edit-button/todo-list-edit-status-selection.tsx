@@ -1,11 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -15,10 +9,16 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { Row } from "@tanstack/react-table";
-import { Task, TaskStatus } from "@prisma/client";
-import { ControllerRenderProps, UseFormReturn } from "react-hook-form";
 import { FormControl } from "@/components/ui/form";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Task, TaskStatus } from "@prisma/client";
+import { Row } from "@tanstack/react-table";
+import { useState } from "react";
+import { ControllerRenderProps, UseFormReturn } from "react-hook-form";
 
 export type Status = {
   value: TaskStatus;
