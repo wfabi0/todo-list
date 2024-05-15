@@ -38,14 +38,43 @@ async function userDetails() {
   const sessionCookie = cookies().get("session");
   if (sessionCookie) {
     const { value } = sessionCookie;
-    const { username, email, role } = await openSessionToken(value);
-    return { username, email, role: role };
+    const {
+      id,
+      username,
+      email,
+      role,
+      createdAt,
+      ownedWorkspaces,
+      sharedWorkspaces,
+    } = await openSessionToken(value);
+    return {
+      id,
+      username,
+      email,
+      role,
+      createdAt,
+      ownedWorkspaces,
+      sharedWorkspaces,
+    };
+  } else {
+    const userCookie = cookies().get("user");
+    if (!userCookie) {
+      const userId = crypto.randomUUID();
+      cookies().set("user", userId, {
+        maxAge: 30 * 365 * 24 * 60 * 60 * 1000,
+      });
+      return { id: userId, username: null };
+    }
+    return { id: userCookie.value, username: null };
   }
-  return false;
 }
 
 function destroySession() {
   cookies().delete("session");
+}
+
+function destroyUser() {
+  cookies().delete("user");
 }
 
 const AuthServices = {
@@ -54,6 +83,7 @@ const AuthServices = {
   userDetails,
   isSessionValid,
   destroySession,
+  destroyUser,
 };
 
 export default AuthServices;

@@ -1,7 +1,7 @@
 "use client";
 
 import { Task } from "@prisma/client";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -39,7 +39,7 @@ import TodoListAddButton from "./add-button/todo-list-add-button";
 import TodoListMenu from "./todo-list-menu";
 import TodoListPencilButton from "./todo-list-pencil-button";
 
-const columns: ColumnDef<Task>[] = [
+export const columns: ColumnDef<Task>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -131,35 +131,42 @@ const columns: ColumnDef<Task>[] = [
     cell: ({ row }) => {
       const payment = row.original;
       return <TodoListMenu row={row} />;
-
-      // return <TodoListEditButton row={row} />;
     },
   },
 ];
 
-export default function TodoListData() {
-  const queryClient = useQueryClient();
+type TodoListDataProps = {
+  data?: { workspace: any; user: any };
+  isLoading: boolean;
+};
 
+export default function TodoListData({
+  data: mainData,
+  isLoading: mainIsLoading,
+}: TodoListDataProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
 
-  // const [tasks, setTasks] = useState<Task[]>([]);
-  const [update, setUpdate] = useState(false);
-  // const [isLoading, setLoading] = useState(true);
-
   const getTasks = async () => {
-    const response = await fetch("/api/task/list?query=teste", {
-      next: { revalidate: 5000 },
-    });
+    const response = await fetch(
+      "/api/task/list?query=" + mainData?.workspace.workspace.id,
+      {
+        next: { revalidate: 5000 },
+      }
+    );
     return response.json();
   };
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ["tasks"],
     queryFn: getTasks,
   });
+
+  if (!mainIsLoading) {
+    refetch();
+  }
 
   const table = useReactTable({
     data: isLoading ? [] : data.tasks,
@@ -179,6 +186,7 @@ export default function TodoListData() {
       rowSelection,
     },
   });
+
   return (
     <div className="w-full bg-white shadow-xl p-4 px-6 rounded-lg">
       <div className="flex items-center py-4 space-x-4">
@@ -192,7 +200,7 @@ export default function TodoListData() {
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <TodoListAddButton setUpdate={setUpdate} />
+            <TodoListAddButton isLoading={mainIsLoading} data={mainData} />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             {table

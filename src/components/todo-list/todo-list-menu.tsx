@@ -66,6 +66,9 @@ export default function TodoListMenu({ row }: TodoListMenuProps) {
       body: JSON.stringify(data),
     });
     if (!response.ok) {
+      queryClient.invalidateQueries({
+        queryKey: ["tasks"],
+      });
       return toast("Failed to edit task.");
     }
 

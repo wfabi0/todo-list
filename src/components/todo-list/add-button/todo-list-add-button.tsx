@@ -1,6 +1,21 @@
 "use client";
 
+import FormConfirmButton from "@/components/form-confirm-button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
+import { Textarea } from "@/components/ui/textarea";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import { Package, Plus } from "lucide-react";
+import { useRef, useState } from "react";
+import { ControllerRenderProps, useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 import { Button } from "../../ui/button";
 import {
   Dialog,
@@ -14,21 +29,6 @@ import {
 import { Input } from "../../ui/input";
 import TodoListCategorySelect from "./todo-list-category-select";
 import TodoListStatusSelect from "./todo-list-status-select";
-import { Textarea } from "@/components/ui/textarea";
-import { useRef, useState } from "react";
-import { toast } from "sonner";
-import FormConfirmButton from "@/components/form-confirm-button";
-import { z } from "zod";
-import { ControllerRenderProps, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
-import { useQueryClient } from "@tanstack/react-query";
 
 export const FormSchema = z.object({
   "task-name": z
@@ -60,15 +60,17 @@ export const FormSchema = z.object({
       label: "Other",
       icon: Package,
     }),
-  "task-workspaceId": z.string({ required_error: "" }).default("teste"),
+  "task-workspaceId": z.string({ required_error: "" }),
 });
 
 type TodoListAddButtonProps = {
-  setUpdate: (value: any) => void;
+  data?: { workspace: any; user: any };
+  isLoading: boolean;
 };
 
 export default function TodoListAddButton({
-  setUpdate,
+  data,
+  isLoading,
 }: TodoListAddButtonProps) {
   const queryClient = useQueryClient();
 
@@ -93,7 +95,6 @@ export default function TodoListAddButton({
 
     form.reset();
     toast("Success to create task.");
-    setUpdate((prev: boolean) => !prev);
     setOpen(!open);
     queryClient.invalidateQueries({
       queryKey: ["tasks"],
@@ -102,7 +103,12 @@ export default function TodoListAddButton({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+      <DialogTrigger
+        onClick={() => {
+          form.setValue("task-workspaceId", data?.workspace.workspace.id);
+        }}
+        asChild
+      >
         <Button
           variant="default"
           className="ml-auto bg-purple-700 hover:bg-purple-900"
@@ -192,6 +198,22 @@ export default function TodoListAddButton({
                       field={field as ControllerRenderProps<any>}
                     />
                   </div>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="task-workspaceId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl className="hidden">
+                    <Input
+                      type="hidden"
+                      placeholder="Your workspace id."
+                      defaultValue={data?.workspace.workspace.id}
+                      {...field}
+                    />
+                  </FormControl>
                 </FormItem>
               )}
             />

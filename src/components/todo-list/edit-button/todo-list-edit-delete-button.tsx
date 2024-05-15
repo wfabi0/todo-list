@@ -35,6 +35,9 @@ export default function TodoListEditDeleteButton({
       body: JSON.stringify({ id }),
     });
     if (!response.ok) {
+      queryClient.invalidateQueries({
+        queryKey: ["tasks"],
+      });
       toast("Failed to delete task.");
     }
 

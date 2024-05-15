@@ -1,11 +1,11 @@
-import { DialogTrigger } from "../../ui/dialog";
-import { Package, SquarePen } from "lucide-react";
+import { Task } from "@prisma/client";
 import { Row } from "@tanstack/react-table";
+import { Package, SquarePen } from "lucide-react";
+import { UseFormReturn } from "react-hook-form";
+import { z } from "zod";
+import { DialogTrigger } from "../../ui/dialog";
 import { categories, Category } from "./todo-list-edit-category";
 import { Status, status } from "./todo-list-edit-status-selection";
-import { Task } from "@prisma/client";
-import { z } from "zod";
-import { UseFormReturn } from "react-hook-form";
 
 export const EditFormSchema = z.object({
   "task-id": z.string({ required_error: "" }),
@@ -38,7 +38,7 @@ export const EditFormSchema = z.object({
       label: "Other",
       icon: Package,
     }),
-  "task-workspaceId": z.string({ required_error: "" }).default("teste"),
+  "task-workspaceId": z.string({ required_error: "" }),
 });
 
 type TodoListEditButtonProps = {
@@ -56,6 +56,7 @@ export default function TodoListEditButton({
         className="flex flex-1"
         onClick={() => {
           form.setValue("task-id", row.original.id);
+          form.setValue("task-workspaceId", row.original.workspaceId);
           form.setValue("task-name", row.original.name);
           form.setValue("task-description", row.original.description || "");
           form.setValue(

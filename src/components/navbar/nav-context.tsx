@@ -1,13 +1,10 @@
 "use client";
 
+import moment from "moment";
 import { useEffect, useState } from "react";
-import NavContextAddUser from "./nav-context/nav-context-add-user";
-import NavContextInfoButton from "./nav-context/nav-context-info-button";
-import NavContextMoreButton from "./nav-context/nav-context-more-button";
-import NavContextMoreUsers from "./nav-context/nav-context-more-users";
-import NavContextUserButton from "./nav-context/nav-context-users-button";
+import { FaAngleRight, FaInfoCircle, FaTasks, FaUsers } from "react-icons/fa";
 import { FaGear } from "react-icons/fa6";
-import { FaUsers, FaTasks, FaInfoCircle, FaAngleRight } from "react-icons/fa";
+import { Separator } from "../ui/separator";
 import {
   Sheet,
   SheetContent,
@@ -16,10 +13,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "../ui/sheet";
-import { Separator } from "../ui/separator";
-import moment from "moment";
+import NavContextAddUser from "./nav-context/nav-context-add-user";
+import NavContextInfoButton from "./nav-context/nav-context-info-button";
+import NavContextMoreButton from "./nav-context/nav-context-more-button";
+import NavContextMoreUsers from "./nav-context/nav-context-more-users";
 import NavContextSelectText from "./nav-context/nav-context-select-task";
-import { User, Workspace } from "@prisma/client";
+import NavContextUserButton from "./nav-context/nav-context-users-button";
 // import "moment/locale/pt-br";
 
 let users = [
@@ -73,20 +72,27 @@ let users = [
   },
 ];
 
-let workspace: any = {
-  id: "teste",
-  name: "🔥 Workspace",
-  description: "This is a workspace description",
-  tasks: [],
-  membersId: [],
-  createdAt: new Date(),
-  updatedAt: new Date(),
-  creatorId: "233232",
-  members: users,
+// let workspace: any = {
+//   id: "teste",
+//   name: "🔥 Workspace",
+//   description: "This is a workspace description",
+//   tasks: [],
+//   membersId: [],
+//   createdAt: new Date(),
+//   updatedAt: new Date(),
+//   creatorId: "233232",
+//   members: users,
+// };
+
+type NavContextProps = {
+  data?: { user: any; workspace: any };
+  isLoadingData: boolean;
 };
 
-export default function NavContext() {
+export default function NavContext({ data, isLoadingData }: NavContextProps) {
   const [isMobile, setIsMobile] = useState(false);
+
+  const workspace = data?.workspace.workspace;
 
   useEffect(() => {
     const checkIsMobile = () => {
@@ -103,10 +109,10 @@ export default function NavContext() {
       <div className="self-center">{workspace.name}</div>
       <div className="bg-zinc-300 w-[1.5px] rounded-full" />
       <div className="flex space-x-[0.23rem] items-center">
-        {workspace.members.slice(0, 4).map((user: any, index: any) => (
+        {workspace.membersId.slice(0, 4).map((user: any, index: any) => (
           <NavContextUserButton key={index} user={user} />
         ))}
-        {workspace.members.length > 4 && (
+        {workspace.membersId.length > 4 && (
           <NavContextMoreUsers workspace={workspace} />
         )}
         <NavContextAddUser />
@@ -134,12 +140,12 @@ export default function NavContext() {
               <div>
                 Collaborators
                 <span className="text-sm text-gray-700 pl-[0.15rem]">
-                  ({workspace.members.length})
+                  ({workspace.membersId.length})
                 </span>
               </div>
             </div>
             <div className="grid grid-cols-6 gap-y-2">
-              {workspace.members.map((user: any, index: any) => (
+              {workspace.membersId.map((user: any, index: any) => (
                 <NavContextUserButton key={index} user={user} />
               ))}
             </div>
