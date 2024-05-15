@@ -18,6 +18,7 @@ model User {
   updatedAt        DateTime @updatedAt
   ownedWorkspaces  String[] @default([])
   sharedWorkspaces String[] @default([])
+  userId           String
 }
 
 model Workspace {
