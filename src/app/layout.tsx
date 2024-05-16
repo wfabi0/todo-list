@@ -25,7 +25,7 @@ export default function RootLayout({
       <html lang="pt-br" suppressHydrationWarning>
         <body className={cn("antialiased min-h-screen", inter.className)}>
           {children}
-          <Toaster />
+          <Toaster richColors closeButton />
         </body>
       </html>
     </QueryProvider>
