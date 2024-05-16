@@ -1,7 +1,7 @@
 # [Todo List]()
 
 <div align="center" style="margin-bottom: 20px;">
-    <img src="public/todo-icon-edit.png" alt="Busca CEP" width="70%" height="auto">
+    <img src="public/statics/todo-icon-edit.png" alt="Busca CEP" width="70%" height="auto">
 </div>
 
 Website para gerenciar listas de tarefas.
