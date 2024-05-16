@@ -28,10 +28,10 @@ export default function FormConfirmButton({
       <Button
         onClick={(e) => setOpen && setOpen(!open)}
         type="submit"
-        disabled={pending}
+        disabled={formState.isSubmitting}
         className={`${className}`}
       >
-        {formState.isLoading ? "Wait..." : text}
+        {formState.isSubmitting ? "Wait..." : text}
       </Button>
     );
   } else {
