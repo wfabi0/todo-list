@@ -5,7 +5,7 @@ import SpinUtil from "../utils/spin";
 export default function NavIcon() {
   return (
     <Link
-      href={"/auth/sign-up"}
+      href={"/profile"}
       className="rounded-full border-2 border-purple-950 hover:border-purple-400 transition duration-300 ease-in-out"
     >
       <Avatar className="h-12 w-12 flex shadow-md">

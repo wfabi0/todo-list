@@ -1,5 +1,6 @@
 "use client";
 
+import Footer from "@/components/footer/footer";
 import Navbar from "@/components/navbar/navbar";
 import TodoList from "@/components/todo-list/todo-list";
 import { useQuery } from "@tanstack/react-query";
@@ -34,7 +35,7 @@ export default function Home() {
     <main className="flex min-h-screen flex-col justify-between bg-slate-300">
       <Navbar data={data} isLoading={isLoading} />
       <TodoList data={data} isLoading={isLoading} />
-      <div />
+      <Footer />
     </main>
   );
 }
