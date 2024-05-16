@@ -38,23 +38,15 @@ async function userDetails() {
   const sessionCookie = cookies().get("session");
   if (sessionCookie) {
     const { value } = sessionCookie;
-    const {
-      id,
-      username,
-      email,
-      role,
-      createdAt,
-      ownedWorkspaces,
-      sharedWorkspaces,
-    } = await openSessionToken(value);
+    const { sub, username, email, role, createdAt } = await openSessionToken(
+      value
+    );
     return {
-      id,
+      id: sub,
       username,
       email,
       role,
       createdAt,
-      ownedWorkspaces,
-      sharedWorkspaces,
     };
   } else {
     const userCookie = cookies().get("user");

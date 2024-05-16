@@ -48,6 +48,7 @@ export async function login(formData: FormData) {
     username: user.username,
     email: user.email,
     role: user.role,
+    createdAt: user.createdAt,
   });
 
   redirect("/profile");
