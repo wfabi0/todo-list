@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Role } from "@prisma/client";
-import { useForm } from "react-hook-form";
+import { ControllerRenderProps, useForm } from "react-hook-form";
 import { z } from "zod";
 import SettingsMobileProfileFormImage from "./settings-mobile-profile-form-image";
 
@@ -52,7 +52,9 @@ export default function SettingsMobileProfile() {
             <FormItem>
               <FormLabel>Avatar</FormLabel>
               <FormControl>
-                <SettingsMobileProfileFormImage field={field} />
+                <SettingsMobileProfileFormImage
+                  field={field as ControllerRenderProps<any>}
+                />
               </FormControl>
             </FormItem>
           )}

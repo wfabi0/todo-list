@@ -16,7 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Role } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
+import { ControllerRenderProps, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import SettingsDesktopProfileFormImage from "./settings-desktop-profile-form-image-";
@@ -159,7 +159,7 @@ export default function SettingsDesktopProfileForm() {
               <FormControl>
                 <SettingsDesktopProfileFormImage
                   form={form}
-                  field={field}
+                  field={field as ControllerRenderProps<any>}
                   isLoading={isLoading}
                   data={data}
                 />
