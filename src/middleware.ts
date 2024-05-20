@@ -6,7 +6,7 @@ export async function middleware(req: NextRequest) {
   const session = await AuthServices.isSessionValid();
   if (!session) {
     const user = await AuthServices.userDetails();
-    if (user.id) {
+    if (user?.email) {
       return NextResponse.next();
     }
     const isAPIRoute = pathname.startsWith("/api");
