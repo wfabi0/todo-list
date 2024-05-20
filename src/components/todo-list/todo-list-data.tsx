@@ -169,7 +169,7 @@ export default function TodoListData({
   }
 
   const table = useReactTable({
-    data: isLoading ? [] : data.tasks,
+    data: isLoading ? [] : data?.tasks ? data.tasks : [],
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,

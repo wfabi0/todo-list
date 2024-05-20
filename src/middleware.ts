@@ -5,7 +5,10 @@ export async function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
   const session = await AuthServices.isSessionValid();
   if (!session) {
-    await AuthServices.userDetails();
+    const user = await AuthServices.userDetails();
+    if (user.id) {
+      return NextResponse.next();
+    }
     const isAPIRoute = pathname.startsWith("/api");
     if (isAPIRoute) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
